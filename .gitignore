@@ -1,0 +1,5 @@
+.idea
+build
+dist
+lingorm.egg-info
+__pycache__
