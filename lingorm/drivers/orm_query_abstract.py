@@ -3,10 +3,6 @@ from abc import ABCMeta, abstractmethod
 
 class ORMQueryAbstract:
     @abstractmethod
-    def create_builder(self):
-        pass
-
-    @abstractmethod
     def fetch_one(self, cls, where_condition, order_condition=None):
         pass
 

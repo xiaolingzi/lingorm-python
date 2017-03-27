@@ -14,9 +14,6 @@ class MysqlORMQuery(ORMQueryAbstract):
         self.__pdo_mysql = PyMysqlHelper(database_info)
         self.__database_info = database_info
 
-    def create_builder(self):
-        return MysqlORMQueryBuilder(self.__database_info)
-
     def fetch_one(self, cls, where_condition, order_condition=None):
         if where_condition is None:
             raise Exception("Missing the where condition!")
