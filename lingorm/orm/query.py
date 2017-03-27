@@ -5,17 +5,15 @@ from ..config import Config
 
 
 class Query:
-    __database_info = None
-
     def __init__(self, key=None):
+        self.__get_database_info(key)
+
+    def __get_database_info(self, key):
         if key is None:
             key = Config.default_database_server
 
         self.__database_info = DatabaseConfig.get_config_by_key(key)
         self.__database_info["key"] = key
-
-    def create_table(self, cls):
-        pass
 
     def create_query(self):
         if self.__database_info["driver"] == "pdo_mysql":
