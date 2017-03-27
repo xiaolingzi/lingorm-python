@@ -23,16 +23,23 @@ class MysqlEntityGenerator:
     def __generate_entity(self, database, table_name, file_dir):
         entity_name = self.__get_entity_name(table_name)
         entity_content = self.__get_template()
+        if entity_content is None:
+            raise Exception("Invalid template")
+
         entity_content = re.sub("\\{\\{database_name\\}\\}", database, entity_content)
         entity_content = re.sub("\\{\\{table_name\\}\\}", table_name, entity_content)
         entity_content = re.sub("\\{\\{class_name\\}\\}", entity_name, entity_content)
 
         reg_property = r"[\s]*<--column-->([\s\S]*)<--column-->"
         match_result = re.search(reg_property, entity_content, re.M | re.I)
+        if match_result is None:
+            raise Exception("Invalid template")
         column_content = match_result.group(1)
 
         reg_init = r"[\s]*<--column_init-->([\s\S]*)<--column_init-->"
         match_result = re.search(reg_init, entity_content, re.M | re.I)
+        if match_result is None:
+            raise Exception("Invalid template")
         column_init_content = match_result.group(1)
 
         column_list = self.__get_columns(database, table_name)
@@ -103,13 +110,17 @@ class MysqlEntityGenerator:
         fp.close()
 
     def __get_template(self):
-        filename = sys.path[0] + "/entity_template.txt"
+        filename = os.path.dirname(__file__) + "/entity_template.py"
+        print(filename)
         if not os.path.exists(filename):
             return ""
         fp = open(filename, "r")
         result = fp.read()
         fp.close()
-        return result;
+        if result is not None:
+            result = re.sub("\# ", "", result)
+            result = re.sub("\#", "", result)
+        return result
 
     def __get_file_name(self, table_name):
         result = re.sub(r'([^A-Z]*)([A-Z]{1})', self.__file_name_deal, table_name)
