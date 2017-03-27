@@ -64,13 +64,13 @@ class MysqlEntityGenerator:
     def __get_tables(self, database):
         sql = "select Table_name from TABLES where TABLE_SCHEMA='" + database + "'"
         result = self.__fetch_all(sql)
-        return result;
+        return result
 
     def __get_columns(self, database, table_name):
         sql = "select Column_name,DATA_TYPE, CHARACTER_MAXIMUM_LENGTH,COLUMN_KEY,EXTRA from COLUMNS " \
               "where TABLE_SCHEMA='" + database + "' and Table_name='" + table_name + "'"
         result = self.__fetch_all(sql)
-        return result;
+        return result
 
     def __get_data_type(self, field_type):
         field_type = field_type.lower()
@@ -112,7 +112,6 @@ class MysqlEntityGenerator:
         return result;
 
     def __get_file_name(self, table_name):
-        print(table_name)
         result = re.sub(r'([^A-Z]*)([A-Z]{1})', self.__file_name_deal, table_name)
         result = result.strip("_")
         return result
