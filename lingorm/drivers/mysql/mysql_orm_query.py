@@ -21,6 +21,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         if cls.__alias_table_name__ is not None:
             table_name = table_name + " " + cls.__alias_table_name__
 
@@ -38,6 +40,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         if cls.__alias_table_name__ is not None:
             table_name = table_name + " " + cls.__alias_table_name__
 
@@ -73,6 +77,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = entity.__table__
         if entity.__database__ is not None:
             table_name = entity.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
 
         sql = "insert into " + table_name + "(" + field_str + ")values(" + value_str + ")"
         result = self.__pdo_mysql.insert(sql, param_dict)
@@ -110,6 +116,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = entity_list[0].__table__
         if entity_list[0].__database__ is not None:
             table_name = entity_list[0].__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
 
         sql = "insert into " + table_name + "(" + field_str + ")values" + value_str
         result = self.__pdo_mysql.execute(sql, param_dict)
@@ -141,6 +149,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = entity.__table__
         if entity.__database__ is not None:
             table_name = entity.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
 
         sql = "update " + table_name + " set " + set_str + " where " + where_str
         result = self.__pdo_mysql.execute(sql, param_dict)
@@ -194,6 +204,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = entity_list[0].__table__
         if entity_list[0].__database__ is not None:
             table_name = entity_list[0].__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
 
         sql = "update " + table_name + " set " + set_str + " where " + primary_key + " in(" + id_str + ")"
         result = self.__pdo_mysql.execute(sql, param_dict)
@@ -221,6 +233,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         if cls.__alias_table_name__ is not None:
             table_name = table_name + " " + cls.__alias_table_name__
 
@@ -245,6 +259,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = entity.__table__
         if entity.__database__ is not None:
             table_name = entity.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
 
         sql = "delete from " + table_name + " where " + where_str
         result = self.__pdo_mysql.execute(sql, param_dict)
@@ -257,6 +273,8 @@ class MysqlORMQuery(ORMQueryAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         alias_table_name = ""
         if cls.__alias_table_name__ is not None:
             alias_table_name = cls.__alias_table_name__

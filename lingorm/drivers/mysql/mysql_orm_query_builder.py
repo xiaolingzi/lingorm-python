@@ -10,6 +10,7 @@ class MysqlORMQueryBuilder(ORMQueryBuilderAbstract):
 
     def __init__(self, database_info):
         self.__pdo_mysql = PyMysqlHelper(database_info)
+        self.__database_info = database_info
 
     def select(self, *args):
         if args is None or len(args) < 1:
@@ -43,6 +44,8 @@ class MysqlORMQueryBuilder(ORMQueryBuilderAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         if cls.__alias_table_name__ is not None:
             table_name = table_name + " " + cls.__alias_table_name__
         self._from_sql = "from " + table_name
@@ -57,6 +60,8 @@ class MysqlORMQueryBuilder(ORMQueryBuilderAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         if cls.__alias_table_name__ is not None:
             table_name = table_name + " " + cls.__alias_table_name__
 
@@ -77,6 +82,8 @@ class MysqlORMQueryBuilder(ORMQueryBuilderAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         if cls.__alias_table_name__ is not None:
             table_name = table_name + " " + cls.__alias_table_name__
 
@@ -97,6 +104,8 @@ class MysqlORMQueryBuilder(ORMQueryBuilderAbstract):
         table_name = cls.__table__
         if cls.__database__ is not None:
             table_name = cls.__database__ + "." + table_name
+        else:
+            table_name = self.__database_info["database"] + "." + table_name
         if cls.__alias_table_name__ is not None:
             table_name = table_name + " " + cls.__alias_table_name__
 

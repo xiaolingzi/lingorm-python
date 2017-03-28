@@ -101,7 +101,7 @@ class MysqlEntityGenerator:
 
     def __save_entity(self, entity_name, content, file_dir):
         if file_dir is None:
-            file_dir = sys.path[0] + "/entity_generate"
+            file_dir = sys.path[0] + "/entity_generated"
         if not os.path.exists(file_dir):
             os.mkdir(file_dir)
         filename = file_dir + "/" + self.__get_file_name(entity_name) + "_entity.py"

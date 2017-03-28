@@ -16,31 +16,31 @@ class Query:
         self.__database_info["key"] = key
 
     def create_query(self):
-        if self.__database_info["driver"] == "pdo_mysql":
+        if self.__database_info["driver"] == "pymysql":
             return MysqlORMQuery(self.__database_info)
         else:
             return MysqlORMQuery(self.__database_info)
 
     def create_query_builder(self):
-        if self.__database_info["driver"] == "pdo_mysql":
+        if self.__database_info["driver"] == "pymysql":
             return MysqlORMQueryBuilder(self.__database_info)
         else:
             return MysqlORMQueryBuilder(self.__database_info)
 
     def create_where(self):
-        if self.__database_info["driver"] == "pdo_mysql":
+        if self.__database_info["driver"] == "pymysql":
             return MysqlWhereExpression()
         else:
             return MysqlWhereExpression()
 
     def create_order(self):
-        if self.__database_info["driver"] == "pdo_mysql":
+        if self.__database_info["driver"] == "pymysql":
             return MysqlOrderExpression()
         else:
             return MysqlOrderExpression()
 
     def create_sql(self):
-        if self.__database_info["driver"] == "pdo_mysql":
+        if self.__database_info["driver"] == "pymysql":
             return MysqlQuery(self.__database_info)
         else:
             return MysqlQuery(self.__database_info)

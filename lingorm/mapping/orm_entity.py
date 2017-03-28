@@ -14,6 +14,8 @@ class ClsMetaclass(type):
                     value.alias_table_name = dct["__alias_table_name__"]
                     if not hasattr(value, "field_name") or value.field_name is None:
                         value.field_name = key
+                    if not hasattr(value, "field_type") or value.field_type is None:
+                        value.field_type = "string"
                     dct[key] = value
                     field_dict[key] = value
             dct["__field_dict__"] = field_dict
