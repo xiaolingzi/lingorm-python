@@ -123,7 +123,7 @@ class MysqlORMQuery(ORMQueryAbstract):
         result = self.__pdo_mysql.execute(sql, param_dict)
         return result
 
-    def update(self, entity):
+    def update(self, entity, none_ignore=False):
         if entity is None:
             return
         set_str = ""
@@ -139,6 +139,8 @@ class MysqlORMQuery(ORMQueryAbstract):
                 param_dict[field.field_name] = FieldType.get_field_value(entity, key, field.field_type)
 
             if field.is_generated:
+                continue
+            if none_ignore and entity.__getattribute__(key) is None:
                 continue
 
             set_str += field.field_name + "=:" + field.field_name + ","
@@ -156,7 +158,7 @@ class MysqlORMQuery(ORMQueryAbstract):
         result = self.__pdo_mysql.execute(sql, param_dict)
         return result
 
-    def batch_update(self, entity_list):
+    def batch_update(self, entity_list, none_ignore=False):
         if entity_list is None:
             return
 
@@ -187,6 +189,8 @@ class MysqlORMQuery(ORMQueryAbstract):
 
                 if field.is_generated:
                     continue
+                if none_ignore and entity.__getattribute__(key) is None:
+                    continue
 
                 param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
 
@@ -198,7 +202,7 @@ class MysqlORMQuery(ORMQueryAbstract):
 
         set_str = ""
         for (key, value) in field_set_dict.items():
-            set_str += key + " = case " + primary_key + value + " else " + primary_key + " end,"
+            set_str += key + " = case " + primary_key + value + " else " + key + " end,"
         set_str = set_str.strip(',')
 
         table_name = entity_list[0].__table__

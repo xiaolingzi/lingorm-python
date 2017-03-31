@@ -19,11 +19,11 @@ class ORMQueryAbstract:
         pass
 
     @abstractmethod
-    def update(self, entity):
+    def update(self, entity, none_ignore=False):
         pass
 
     @abstractmethod
-    def batch_update(self, entity_list):
+    def batch_update(self, entity_list, none_ignore=False):
         pass
 
     @abstractmethod
