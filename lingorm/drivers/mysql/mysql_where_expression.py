@@ -22,7 +22,9 @@ class MysqlWhereExpression(WhereExpressionAbstract):
         for item in args:
             temp_sql = ""
             if type(item) == str:
-                temp_sql = "(" + item + ")"
+                temp_sql = item
+            elif isinstance(item, MysqlWhereExpression):
+                temp_sql = item.sql
             else:
                 expression_dict = MysqlDefine().get_expression(item, self.param_dict)
                 temp_sql = expression_dict["sql"]
@@ -30,6 +32,8 @@ class MysqlWhereExpression(WhereExpressionAbstract):
             if sql is None:
                 sql = temp_sql
             else:
+                if " and " in temp_sql or " or " in temp_sql:
+                    temp_sql = "("+temp_sql+")"
                 if set_type == 1:
                     sql += " and " + temp_sql
                 else:

@@ -84,17 +84,21 @@ class MysqlORMQuery(ORMQueryAbstract):
         result = self.__pdo_mysql.insert(sql, param_dict)
         return result
 
-    def batch_insert(self, entity_list):
+    def batch_insert(self, entity_list, none_ignore=False):
         if entity_list is None:
             return
 
         field_dict = entity_list[0].__field_dict__
 
         field_str = ""
+        insert_field_list = []
         for (key, field) in field_dict.items():
             if field.is_generated:
                 continue
+            if none_ignore and entity_list[0].__getattribute__(key) is None:
+                continue
             field_str += field.field_name + ","
+            insert_field_list.append(field.field_name)
         field_str = field_str.strip(',')
 
         value_str = ""
@@ -105,9 +109,14 @@ class MysqlORMQuery(ORMQueryAbstract):
             for (key, field) in field_dict.items():
                 if field.is_generated:
                     continue
-                temp_name = field.field_name + str(index)
-                value_str += ":" + temp_name + ","
-                param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
+                if none_ignore and field.field_name not in insert_field_list:
+                    continue
+                if entity.__getattribute__(key) is None:
+                    value_str += "default,"
+                else:
+                    temp_name = field.field_name + str(index)
+                    value_str += ":" + temp_name + ","
+                    param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
             value_str = value_str.strip(',')
             value_str += "),"
             index += 1

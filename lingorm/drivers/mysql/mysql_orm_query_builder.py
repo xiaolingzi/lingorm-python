@@ -130,10 +130,11 @@ class MysqlORMQueryBuilder(ORMQueryBuilderAbstract):
             raise Exception("Order type not found")
         order_type = order_type.lower()
         order_type = MysqlDefine.order_dict[order_type]
-
-        field_name = field.field_name
-        if field.alias_table_name is not None:
-            field_name = field.alias_table_name + "." + field_name
+        field_name = field
+        if isinstance(field, Field):
+            field_name = field.field_name
+            if field.alias_table_name is not None:
+                field_name = field.alias_table_name + "." + field_name
         if self._order_sql is None:
             self._order_sql = "order by " + field_name + " " + order_type
         else:

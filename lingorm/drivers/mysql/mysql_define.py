@@ -32,12 +32,19 @@ class MysqlDefine:
             else:
                 sql = field_name + self.operator_dict[condition.operator] + condition.value.field_name
         else:
-            param_name = "p" + str(CommonDefine.SQL_PARAMETER_INDEX);
-            CommonDefine.SQL_PARAMETER_INDEX += 1
-            param_dict[param_name] = condition.value
-            if condition.operator == CommonDefine.OPERATOR_IN or condition.operator == CommonDefine.OPERATOR_NIN:
-                sql = field_name + " " + self.operator_dict[condition.operator] + "(:" + param_name + ")"
+
+            if condition.value is None:
+                if condition.operator == CommonDefine.OPERATOR_EQ:
+                    sql = field_name+" is null"
+                elif condition.operator == CommonDefine.OPERATOR_NEQ:
+                    sql = field_name + " is not null"
             else:
-                sql = field_name + " " + self.operator_dict[condition.operator] + " :" + param_name
+                param_name = "p" + str(CommonDefine.SQL_PARAMETER_INDEX);
+                CommonDefine.SQL_PARAMETER_INDEX += 1
+                param_dict[param_name] = condition.value
+                if condition.operator == CommonDefine.OPERATOR_IN or condition.operator == CommonDefine.OPERATOR_NIN:
+                    sql = field_name + " " + self.operator_dict[condition.operator] + "(:" + param_name + ")"
+                else:
+                    sql = field_name + " " + self.operator_dict[condition.operator] + " :" + param_name
 
         return {"sql": sql, "param_dict": param_dict}

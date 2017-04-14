@@ -15,7 +15,7 @@ class ORMQueryAbstract:
         pass
 
     @abstractmethod
-    def batch_insert(self, entity_list):
+    def batch_insert(self, entity_list, none_ignore=False):
         pass
 
     @abstractmethod
