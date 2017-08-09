@@ -9,3 +9,11 @@ class WhereExpressionAbstract:
     @abstractmethod
     def set_or(self, *args):
         pass
+
+    @abstractmethod
+    def get_and(self, *args):
+        pass
+
+    @abstractmethod
+    def get_or(self, *args):
+        pass

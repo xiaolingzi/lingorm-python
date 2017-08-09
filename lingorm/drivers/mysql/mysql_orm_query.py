@@ -3,7 +3,6 @@ from ...drivers.orm_query_abstract import ORMQueryAbstract
 from ...drivers.mysql.pymysql_helper import PyMysqlHelper
 from ...mapping.entity_converter import EntityConverter
 from .mysql_define import MysqlDefine
-from ...drivers.mysql.mysql_orm_query_builder import MysqlORMQueryBuilder
 
 
 class MysqlORMQuery(ORMQueryAbstract):

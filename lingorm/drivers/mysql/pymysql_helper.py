@@ -65,7 +65,7 @@ class PyMysqlHelper:
         if param_dict is None or len(param_dict) == 0:
             return {"sql": sql, "param": param_dict}
 
-        find_list = re.findall(r':([^\s\\,\\):]+)', sql)
+        find_list = re.findall(r':([^\s,):]+)', sql)
 
         sql_deal = sql
         param_list = []
