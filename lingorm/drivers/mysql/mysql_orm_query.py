@@ -65,12 +65,15 @@ class MysqlORMQuery(ORMQueryAbstract):
         field_str = ""
         value_str = ""
         param_dict = {}
+        index = 0
         for (key, field) in entity.__field_dict__.items():
             if field.is_generated:
                 continue
+            temp_name = "f" + str(index)
             field_str += field.field_name + ","
-            value_str += ":" + field.field_name + ","
-            param_dict[field.field_name] = FieldType.get_field_value(entity, key, field.field_type)
+            value_str += ":" + temp_name + ","
+            param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
+            index += 1
         field_str = field_str.strip(',')
         value_str = value_str.strip(',')
 
@@ -104,6 +107,7 @@ class MysqlORMQuery(ORMQueryAbstract):
         value_str = ""
         param_dict = {}
         index = 0
+
         for entity in entity_list:
             value_str += "("
             for (key, field) in field_dict.items():
@@ -114,12 +118,13 @@ class MysqlORMQuery(ORMQueryAbstract):
                 if entity.__getattribute__(key) is None:
                     value_str += "default,"
                 else:
-                    temp_name = field.field_name + str(index)
+                    temp_name = "f" + str(index)
                     value_str += ":" + temp_name + ","
                     param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
+                    index += 1
             value_str = value_str.strip(',')
             value_str += "),"
-            index += 1
+
         value_str = value_str.strip(',')
 
         table_name = entity_list[0].__table__
@@ -138,22 +143,26 @@ class MysqlORMQuery(ORMQueryAbstract):
         set_str = ""
         where_str = None
         param_dict = {}
+        index = 0
 
         for (key, field) in entity.__field_dict__.items():
             if field.primary_key:
+                temp_name = "p" + str(index)
                 if where_str is None:
-                    where_str = field.field_name + "=:" + field.field_name
+                    where_str = field.field_name + "=:" + temp_name
                 else:
-                    where_str += " and " + field.field_name + "=:" + field.field_name
-                param_dict[field.field_name] = FieldType.get_field_value(entity, key, field.field_type)
+                    where_str += " and " + field.field_name + "=:" + field.temp_name
+                param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
 
             if field.is_generated:
                 continue
             if none_ignore and entity.__getattribute__(key) is None:
                 continue
 
-            set_str += field.field_name + "=:" + field.field_name + ","
-            param_dict[field.field_name] = FieldType.get_field_value(entity, key, field.field_type)
+            temp_name = "f" + str(index)
+            set_str += field.field_name + "=:" + temp_name + ","
+            param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
+            index += 1
 
         set_str = set_str.strip(',')
 
@@ -188,26 +197,27 @@ class MysqlORMQuery(ORMQueryAbstract):
         index = 0
         for entity in entity_list:
             for (key, field) in field_dict.items():
-                temp_name = field.field_name + str(index)
+                temp_id_name = "p" + str(index)
                 if field.primary_key:
                     if id_str is None:
-                        id_str = ":" + temp_name
+                        id_str = ":" + temp_id_name
                     else:
-                        id_str += ",:" + temp_name
-                    param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
+                        id_str += ",:" + temp_id_name
+                    param_dict[temp_id_name] = FieldType.get_field_value(entity, key, field.field_type)
 
                 if field.is_generated:
                     continue
                 if none_ignore and entity.__getattribute__(key) is None:
                     continue
 
+                temp_name = "f" + str(index)
                 param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
 
                 if key in field_set_dict:
-                    field_set_dict[field.field_name] += " when :" + primary_key + str(index) + " then :" + temp_name
+                    field_set_dict[field.field_name] += " when :" + temp_id_name + " then :" + temp_name
                 else:
-                    field_set_dict[field.field_name] = " when :" + primary_key + str(index) + " then :" + temp_name
-            index += 1
+                    field_set_dict[field.field_name] = " when :" + temp_id_name + " then :" + temp_name
+                index += 1
 
         set_str = ""
         for (key, value) in field_set_dict.items():
@@ -261,13 +271,16 @@ class MysqlORMQuery(ORMQueryAbstract):
 
         param_dict = {}
         where_str = None
+        index = 0
         for (key, field) in entity.__field_dict__.items():
             if field.primary_key:
-                param_dict[field.field_name] = FieldType.get_field_value(entity, key, field.field_type)
+                temp_name = "p" + str(index)
+                param_dict[temp_name] = FieldType.get_field_value(entity, key, field.field_type)
                 if where_str is None:
-                    where_str = field.field_name + "=:" + field.field_name
+                    where_str = field.field_name + "=:" + temp_name
                 else:
-                    where_str += " and " + field.field_name + "=:" + field.field_name
+                    where_str += " and " + field.field_name + "=:" + temp_name
+                index += 1
 
         table_name = entity.__table__
         if entity.__database__ is not None:
