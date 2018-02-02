@@ -28,7 +28,7 @@ class MysqlORMQuery(ORMQueryAbstract):
         sql = "select * from " + table_name + " where " + where_condition.sql
         if order_condition is not None and order_condition.sql is not None:
             sql += " order by " + order_condition.sql
-		sql += " limit 1"
+        sql += " limit 1"
 
         data_dict = self.__pdo_mysql.fetch_one(sql, where_condition.param_dict)
         return EntityConverter.dict_to_entity(cls, data_dict)

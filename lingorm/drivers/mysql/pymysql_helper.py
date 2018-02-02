@@ -1,5 +1,6 @@
 import pymysql
 import re
+from ..database_config import DatabaseConfig
 
 
 class PyMysqlHelper:
@@ -7,20 +8,33 @@ class PyMysqlHelper:
 
     def __init__(self, database_info):
         key = database_info["key"]
-        if key in PyMysqlHelper.__connection_pool:
+        if "servers" in database_info.keys():
+            self.__connection = None
+            self.__read_database = DatabaseConfig.get_read_write_database(database_info, "r")
+            self.__write_database = DatabaseConfig.get_read_write_database(database_info, "w")
+        elif key in PyMysqlHelper.__connection_pool:
             self.__connection = PyMysqlHelper.__connection_pool[key]
         else:
-            self.__connection = pymysql.connect(
-                host=database_info["host"]
-                , user=database_info["user"]
-                , passwd=database_info["password"]
-                , db=database_info["database"]
-                , charset=database_info["charset"]
-                , cursorclass=pymysql.cursors.DictCursor
-            )
+            self.__connection = self.__get_connection(database_info)
             PyMysqlHelper.__connection_pool[key] = self.__connection
 
+    def __get_connection(self, database_info):
+        return pymysql.connect(
+            host=database_info["host"]
+            , user=database_info["user"]
+            , passwd=database_info["password"]
+            , db=database_info["database"]
+            , charset=database_info["charset"]
+            , cursorclass=pymysql.cursors.DictCursor
+        )
+
     def execute(self, sql, param_dict=None):
+        if self.__connection is None:
+            sql = sql.strip()
+            if sql[0:6].lower() == "select":
+                self.__connection = self.__get_connection(self.__read_database)
+            else:
+                self.__connection = self.__get_connection(self.__write_database)
         tran_result = self.__sql_translate(sql, param_dict)
         cursor = self.__connection.cursor()
         result = 0
@@ -35,6 +49,8 @@ class PyMysqlHelper:
         return result
 
     def fetch_one(self, sql, param_dict=None):
+        if self.__connection is None:
+            self.__connection = self.__get_connection(self.__read_database)
         tran_result = self.__sql_translate(sql, param_dict)
         cursor = self.__connection.cursor()
         cursor.execute(tran_result["sql"], tran_result["param"])
@@ -44,6 +60,8 @@ class PyMysqlHelper:
         return result
 
     def fetch_all(self, sql, param_dict=None):
+        if self.__connection is None:
+            self.__connection = self.__get_connection(self.__read_database)
         tran_result = self.__sql_translate(sql, param_dict)
         cursor = self.__connection.cursor()
         cursor.execute(tran_result["sql"], tran_result["param"])
@@ -53,6 +71,8 @@ class PyMysqlHelper:
         return result
 
     def insert(self, sql, param_dict=None):
+        if self.__connection is None:
+            self.__connection = self.__get_connection(self.__write_database)
         tran_result = self.__sql_translate(sql, param_dict)
         cursor = self.__connection.cursor()
         cursor.execute(tran_result["sql"], tran_result["param"])
