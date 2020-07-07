@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='lingorm',
-    version='1.0.0',
-    url='https://www.xxling.com',
-    description='A python orm',
+    version='2.0.0',
+    url='https://lingorm.com',
+    description='orm framework for python',
     author='xiaolingzi',
     author_email='xlne@foxmail.com',
-    license='LGPL',
+    license='MIT',
     packages=find_packages(exclude=('*.sample', '*.sample.*','sample')),
     include_package_data=True,
     zip_safe=False,
