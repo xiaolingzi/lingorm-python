@@ -184,5 +184,4 @@ class QueryBuilder(QueryBuilderAbstract):
         if self._limit_sql:
             sql += " LIMIT " + self._limit_sql
         self._sql = sql
-        print(sql)
         return sql

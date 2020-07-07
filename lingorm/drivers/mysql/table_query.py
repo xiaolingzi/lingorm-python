@@ -72,7 +72,6 @@ class TableQuery(TableQueryAbstract):
 
     def find(self):
         sql = self.__get_sql()
-        print(sql)
         return self.__native.find(sql, self._param_dict, self.__table)
 
     def find_page(self, page_index, page_size):
