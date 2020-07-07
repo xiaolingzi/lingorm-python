@@ -12,13 +12,11 @@ from .pymysql_helper import PyMysqlHelper
 
 
 class Query(QueryAbstract):
-    __pdo_mysql = None
     __database_info = None
     __native = None
     __transaction_key = None
 
     def __init__(self, database_info):
-        self.__pdo_mysql = PyMysqlHelper(database_info)
         self.__database_info = database_info
         self.__native = NativeQuery(database_info)
 
@@ -95,7 +93,7 @@ class Query(QueryAbstract):
 
         sql = "INSERT INTO " + table_name + \
             "(" + field_str + ")VALUES(" + value_str + ")"
-        result = self.__pdo_mysql.insert(sql, param_dict)
+        result = PyMysqlHelper(self.__database_info, self.__transaction_key).insert(sql, param_dict)
         return result
 
     def batch_insert(self, entity_list, none_ignore=False):
@@ -147,7 +145,7 @@ class Query(QueryAbstract):
 
         sql = "INSERT INTO " + table_name + \
             "(" + field_str + ")VALUES" + value_str
-        result = self.__pdo_mysql.execute(sql, param_dict)
+        result = self.__native.execute(sql, param_dict)
         return result
 
     def update(self, entity, none_ignore=False):
@@ -188,7 +186,7 @@ class Query(QueryAbstract):
             table_name = self.__database_info["database"] + "." + table_name
 
         sql = "UPDATE " + table_name + " SET " + set_str + " WHERE " + where_str
-        result = self.__pdo_mysql.execute(sql, param_dict)
+        result = self.__native.execute(sql, param_dict)
         return result
 
     def batch_update(self, entity_list, none_ignore=False):
@@ -255,7 +253,7 @@ class Query(QueryAbstract):
         sql = "UPDATE " + table_name + " SET " + set_str + \
             " WHERE " + primary_key + " IN(" + id_str + ")"
 
-        result = self.__pdo_mysql.execute(sql, param_dict)
+        result = self.__native.execute(sql, param_dict)
         return result
 
     def update_by(self, cls, set_list, where):
@@ -286,7 +284,7 @@ class Query(QueryAbstract):
             table_name = table_name + " " + cls.__alias_table_name__
 
         sql = "UPDATE " + table_name + " SET " + set_str + " WHERE " + where.sql
-        result = self.__pdo_mysql.execute(sql, where.param_dict)
+        result = self.__native.execute(sql, where.param_dict)
         return result
 
     def delete(self, entity):
@@ -314,7 +312,7 @@ class Query(QueryAbstract):
             table_name = self.__database_info["database"] + "." + table_name
 
         sql = "DELETE FROM " + table_name + " WHERE " + where_str
-        result = self.__pdo_mysql.execute(sql, param_dict)
+        result = self.__native.execute(sql, param_dict)
         return result
 
     def delete_by(self, cls, where):
@@ -332,7 +330,7 @@ class Query(QueryAbstract):
             table_name = table_name + " " + cls.__alias_table_name__
 
         sql = "DELETE " + alias_table_name + " FROM " + table_name + " WHERE " + where.sql
-        result = self.__pdo_mysql.execute(sql, where.param_dict)
+        result = self.__native.execute(sql, where.param_dict)
         return result
 
     def create_query_builder(self):
