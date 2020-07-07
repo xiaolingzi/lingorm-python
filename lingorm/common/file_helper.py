@@ -10,7 +10,7 @@ class FileHelper:
         fp = open(filename, "r")
         result = fp.read()
         fp.close()
-        return result;
+        return result
 
     @staticmethod
     def write_file_content(filename, content):

@@ -1,13 +1,13 @@
 from abc import ABCMeta, abstractmethod
 
 
-class WhereExpressionAbstract:
+class WhereAbstract:
     @abstractmethod
-    def set_and(self, *args):
+    def add_and(self, *args):
         pass
 
     @abstractmethod
-    def set_or(self, *args):
+    def add_or(self, *args):
         pass
 
     @abstractmethod
@@ -16,4 +16,12 @@ class WhereExpressionAbstract:
 
     @abstractmethod
     def get_or(self, *args):
+        pass
+
+    @abstractmethod
+    def or_and(self, *args):
+        pass
+
+    @abstractmethod
+    def and_or(self, *args):
         pass

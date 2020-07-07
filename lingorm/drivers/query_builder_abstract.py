@@ -1,16 +1,16 @@
 from abc import ABCMeta, abstractmethod
 
 
-class ORMQueryBuilderAbstract:
-    _sql = None
+class QueryBuilderAbstract:
+    _sql = ""
     _param_dict = {}
-    _select_sql = None
-    _from_sql = None
-    _join_sql = None
-    _where_sql = None
-    _group_sql = None
-    _order_sql = None
-    _limit_sql = None
+    _select_sql = ""
+    _from_sql = ""
+    _join_sql = ""
+    _where_sql = ""
+    _group_sql = ""
+    _order_sql = ""
+    _limit_sql = ""
 
     @abstractmethod
     def select(self, **kwargs):
@@ -33,11 +33,11 @@ class ORMQueryBuilderAbstract:
         pass
 
     @abstractmethod
-    def where(self, where_expression):
+    def where(self, *args):
         pass
 
     @abstractmethod
-    def order_by(self, field, order_type):
+    def order_by(self, *args):
         pass
 
     @abstractmethod
@@ -49,9 +49,17 @@ class ORMQueryBuilderAbstract:
         pass
 
     @abstractmethod
-    def get_result(self, cls=None):
+    def first(self, cls=None):
         pass
 
     @abstractmethod
-    def get_page_result(self, page_index, page_size, cls=None):
+    def find(self, cls=None):
+        pass
+
+    @abstractmethod
+    def find_page(self, page_index, page_size, cls=None):
+        pass
+
+    @abstractmethod
+    def find_count(self):
         pass

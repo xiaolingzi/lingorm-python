@@ -26,9 +26,12 @@ class MysqlEntityGenerator:
         if entity_content is None:
             raise Exception("Invalid template")
 
-        entity_content = re.sub("\\{\\{database_name\\}\\}", database, entity_content)
-        entity_content = re.sub("\\{\\{table_name\\}\\}", table_name, entity_content)
-        entity_content = re.sub("\\{\\{class_name\\}\\}", entity_name, entity_content)
+        entity_content = re.sub(
+            "\\{\\{database_name\\}\\}", database, entity_content)
+        entity_content = re.sub(
+            "\\{\\{table_name\\}\\}", table_name, entity_content)
+        entity_content = re.sub(
+            "\\{\\{class_name\\}\\}", entity_name, entity_content)
 
         reg_property = r"[\s]*<--column-->([\s\S]*)<--column-->"
         match_result = re.search(reg_property, entity_content, re.M | re.I)
@@ -46,25 +49,33 @@ class MysqlEntityGenerator:
         property_content = ""
         property_init_content = ""
         for column in column_list:
-            column_property = 'field_name="' + column["Column_name"] + '"'
+            column_property = 'field_name="' + column["COLUMN_NAME"] + '"'
             data_type = self.__get_data_type(column["DATA_TYPE"])
             column_property += ', field_type="' + data_type + '"'
             if data_type == "string" and column["CHARACTER_MAXIMUM_LENGTH"] is not None:
-                column_property += ', length="' + str(column["CHARACTER_MAXIMUM_LENGTH"]) + '"'
+                column_property += ', length="' + \
+                    str(column["CHARACTER_MAXIMUM_LENGTH"]) + '"'
             if column["COLUMN_KEY"] == "PRI":
                 column_property += ', primary_key=True'
             if column["EXTRA"] == "auto_increment":
                 column_property += ', is_generated=True'
-            property_name = self.__get_property_name(column["Column_name"])
-            temp_property_content = re.sub("\\{\\{property_name\\}\\}", property_name, column_content)
-            temp_property_content = re.sub("\\{\\{column_property\\}\\}", column_property, temp_property_content)
-            property_content += temp_property_content.strip(" ").strip("\r\n") + "\n"
+            property_name = self.__get_property_name(column["COLUMN_NAME"])
+            temp_property_content = re.sub(
+                "\\{\\{property_name\\}\\}", property_name, column_content)
+            temp_property_content = re.sub(
+                "\\{\\{column_property\\}\\}", column_property, temp_property_content)
+            property_content += temp_property_content.strip(
+                " ").strip("\r\n") + "\n"
 
-            temp_init_content = re.sub("\\{\\{property_name\\}\\}", property_name, column_init_content)
-            property_init_content += temp_init_content.strip(" ").strip("\r\n") + "\n"
+            temp_init_content = re.sub(
+                "\\{\\{property_name\\}\\}", property_name, column_init_content)
+            property_init_content += temp_init_content.strip(
+                " ").strip("\r\n") + "\n"
 
-        entity_content = re.sub(reg_property, "\n" + property_content, entity_content)
-        entity_content = re.sub(reg_init, "\n" + property_init_content, entity_content)
+        entity_content = re.sub(reg_property, "\n" +
+                                property_content, entity_content)
+        entity_content = re.sub(
+            reg_init, "\n" + property_init_content, entity_content)
         entity_content = entity_content.strip("\n ")
         self.__save_entity(entity_name, entity_content, file_dir)
 
@@ -104,9 +115,10 @@ class MysqlEntityGenerator:
             file_dir = sys.path[0] + "/entity_generated"
         if not os.path.exists(file_dir):
             os.mkdir(file_dir)
-        filename = file_dir + "/" + self.__get_file_name(entity_name) + "_entity.py"
+        filename = file_dir + "/" + \
+            self.__get_file_name(entity_name) + "_entity.py"
         fp = open(filename, "w")
-        result = fp.write(content)
+        fp.write(content)
         fp.close()
 
     def __get_template(self):

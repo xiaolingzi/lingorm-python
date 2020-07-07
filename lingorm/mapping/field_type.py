@@ -24,7 +24,7 @@ class FieldType:
         val = entity.__getattribute__(property_name)
         if val is None:
             return val
-        if field_type == "datetime":
+        if field_type == "datetime" or field_type == "date" or field_type == "time":
             if type(val) == datetime.datetime:
                 return val.strftime("%Y-%m-%d %H:%M:%S")
             elif type(val) == time.struct_time:
@@ -32,7 +32,7 @@ class FieldType:
             elif type(val) == float or type(val) == int:
                 return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(val))
             elif type(val) == str:
-                return time.strptime(val,"%Y-%m-%d %H:%M:%S")
+                return val
             else:
                 raise Exception("Invalid datetime value")
         return val

@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
 
 
-class OrderExpressionAbstract:
+class OrderByAbstract:
     @abstractmethod
-    def order_by(self, field, order):
+    def by(self, *args):
         pass
 

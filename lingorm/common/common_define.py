@@ -8,6 +8,7 @@ class CommonDefine:
     OPERATOR_IN = "in"
     OPERATOR_NIN = "nin"
     OPERATOR_LIKE = "like"
+    OPERATOR_FIND_IN_SET = "fis"
 
     TABLE_INDEX = 0
     SQL_PARAMETER_INDEX = 0
