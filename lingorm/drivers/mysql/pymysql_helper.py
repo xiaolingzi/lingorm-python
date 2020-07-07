@@ -77,8 +77,6 @@ class PyMysqlHelper:
         if self.__transaction_key is None or self.__transaction_key not in PyMysqlHelper.transaction_connectors.keys():
             self.__connection.commit()
         cursor.close()
-        print(result)
-        print(222)
         return result
 
     def begin(self):
