@@ -159,7 +159,7 @@ class Query(QueryAbstract):
         index = 0
 
         for (key, field) in entity.__field_dict__.items():
-            if field.primary_key:
+            if field.is_primary:
                 temp_name = "p" + str(index)
                 if where_str is None:
                     where_str = field.field_name + "=:" + temp_name
@@ -199,7 +199,7 @@ class Query(QueryAbstract):
 
         primary_list = []
         for (key, field) in field_dict.items():
-            if field.primary_key:
+            if field.is_primary:
                 primary_list.append({"key": key, "type": field.field_type})
 
         if len(primary_list) > 1 or len(primary_list) < 1:
@@ -222,7 +222,7 @@ class Query(QueryAbstract):
                 entity, primary_key, primary_type)
 
             for (key, field) in field_dict.items():
-                if field.primary_key:
+                if field.is_primary:
                     continue
                 if field.is_generated:
                     continue
@@ -297,7 +297,7 @@ class Query(QueryAbstract):
         where_str = None
         index = 0
         for (key, field) in entity.__field_dict__.items():
-            if field.primary_key:
+            if field.is_primary:
                 temp_name = "p" + str(index)
                 param_dict[temp_name] = FieldType.get_field_value(
                     entity, key, field.field_type)

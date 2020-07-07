@@ -56,7 +56,7 @@ class MysqlEntityGenerator:
                 column_property += ', length="' + \
                     str(column["CHARACTER_MAXIMUM_LENGTH"]) + '"'
             if column["COLUMN_KEY"] == "PRI":
-                column_property += ', primary_key=True'
+                column_property += ', is_primary=True'
             if column["EXTRA"] == "auto_increment":
                 column_property += ', is_generated=True'
             property_name = self.__get_property_name(column["COLUMN_NAME"])

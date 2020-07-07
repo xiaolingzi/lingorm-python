@@ -8,7 +8,7 @@ class Field:
         self.field_length = kwargs.get("length")
         self.field_name = kwargs.get("field_name")
         self.default_value = kwargs.get("default_value")
-        self.primary_key = kwargs.get("primary_key", False)
+        self.is_primary = kwargs.get("is_primary", False)
         self.is_generated = kwargs.get("is_generated", False)
         self.table_name = kwargs.get("table_name")
         self.alias_table_name = kwargs.get("alias_table_name")
