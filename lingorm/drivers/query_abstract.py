@@ -51,11 +51,11 @@ class QueryAbstract:
         pass
 
     @abstractmethod
-    def create_query_builder(self):
+    def query_builder(self):
         pass
 
     @abstractmethod
-    def create_native(self):
+    def native_query(self):
         pass
 
     @abstractmethod

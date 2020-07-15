@@ -36,7 +36,7 @@ class TestQueryBuilder:
         where = self.db.create_where()
         where.add_and(f.first_name.eq("query 1"), f.first_number.eq(1))
         where.or_and(f.first_name.eq("query 2"), f.first_number.eq(2))
-        builder = self.db.create_query_builder()
+        builder = self.db.query_builder()
         builder = builder.select(f.first_name, s.second_name).from_table(f).left_join(
             s, f.first_number.eq(s.second_number)).where(where).order_by(f.id.desc())
 
@@ -50,7 +50,7 @@ class TestQueryBuilder:
         s = SencondTableEntity
         where = self.db.create_where()
         where.add_and(f.first_name.like("query%"))
-        builder = self.db.create_query_builder()
+        builder = self.db.query_builder()
         builder = builder.select(f.first_number, f.first_name.i().max().alias("first_name"), s.second_name.i().f("MAX").alias("second_name")).from_table(f).right_join(
             s, f.first_number.eq(s.second_number)).where(where).group_by(f.first_number).order_by(f.first_number.desc())
 
@@ -65,7 +65,7 @@ class TestQueryBuilder:
         where = self.db.create_where()
         where.add_and(f.first_name.eq("query 1"), f.first_number.eq(1))
         where.or_and(f.first_name.eq("query 2"), f.first_number.eq(2))
-        builder = self.db.create_query_builder()
+        builder = self.db.query_builder()
         builder = builder.select(f.first_name, s.second_name).from_table(f).inner_join(
             s, f.first_number.eq(s.second_number)).where(where).order_by(f.id.desc())
 
@@ -79,7 +79,7 @@ class TestQueryBuilder:
         where = self.db.create_where()
         where.add_and(f.first_name.eq("query 1"), f.first_number.eq(1))
         where.or_and(f.first_name.eq("query 2"), f.first_number.eq(2))
-        builder = self.db.create_query_builder()
+        builder = self.db.query_builder()
         builder = builder.select(f.first_name, s.second_name).from_table(f).left_join(
             s, f.first_number.eq(s.second_number)).where(where).order_by(f.id.desc())
 

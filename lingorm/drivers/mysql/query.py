@@ -334,10 +334,10 @@ class Query(QueryAbstract):
         result = self.__native.execute(sql, where.param_dict)
         return result
 
-    def create_query_builder(self):
+    def query_builder(self):
         return QueryBuilder(self.__database_info, self.__transaction_key)
 
-    def create_native(self):
+    def native_query(self):
         return NativeQuery(self.__database_info, self.__transaction_key)
 
     def create_where(self):
