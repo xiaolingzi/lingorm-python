@@ -12,10 +12,9 @@ class EntityConverter:
                     if attr_value.field_name is None:
                         attr_value.field_name = attr_key
                     if attr_value.field_name == key:
-                        temp_value = data_dict[key]
-                        result.__setattr__(attr_key, temp_value)
+                        result.__setattr__(attr_key, value)
                         flag = False
                         break
             if flag:
-                result.__setattr__(key, data_dict[key])
+                result.__setattr__(key, value)
         return result

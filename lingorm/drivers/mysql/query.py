@@ -18,10 +18,10 @@ class Query(QueryAbstract):
 
     def __init__(self, database_info):
         self.__database_info = database_info
-        self.__native = NativeQuery(database_info)
+        self.__native = NativeQuery(database_info, self.__transaction_key)
 
     def table(self, table):
-        return TableQuery(self.__database_info).table(table)
+        return TableQuery(self.__database_info, self.__transaction_key).table(table)
 
     def first(self, cls, where, order_by=None):
         sql = self.__get_sql(cls, where, order_by)
@@ -93,7 +93,8 @@ class Query(QueryAbstract):
 
         sql = "INSERT INTO " + table_name + \
             "(" + field_str + ")VALUES(" + value_str + ")"
-        result = PyMysqlHelper(self.__database_info, self.__transaction_key).insert(sql, param_dict)
+        result = PyMysqlHelper(self.__database_info,
+                               self.__transaction_key).insert(sql, param_dict)
         return result
 
     def batch_insert(self, entity_list, none_ignore=False):
@@ -334,10 +335,10 @@ class Query(QueryAbstract):
         return result
 
     def create_query_builder(self):
-        return QueryBuilder(self.__database_info)
+        return QueryBuilder(self.__database_info, self.__transaction_key)
 
     def create_native(self):
-        return NativeQuery(self.__database_info)
+        return NativeQuery(self.__database_info, self.__transaction_key)
 
     def create_where(self):
         return Where()

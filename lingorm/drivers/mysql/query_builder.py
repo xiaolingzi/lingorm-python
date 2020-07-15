@@ -11,9 +11,9 @@ from .pymysql_helper import PyMysqlHelper
 class QueryBuilder(QueryBuilderAbstract):
     __native = None
 
-    def __init__(self, database_info):
+    def __init__(self, database_info, transaction_key=None):
         self.__database_info = database_info
-        self.__native = NativeQuery(database_info)
+        self.__native = NativeQuery(database_info, transaction_key)
 
     def select(self, *args):
         self._select_sql = Column().select(args)
@@ -131,14 +131,14 @@ class QueryBuilder(QueryBuilderAbstract):
             self._order_sql += "," + order_by.sql
         return self
 
-    def group_by(self, **args):
+    def group_by(self, *args):
         if args is None:
             raise Exception("Fields for grouping not found")
         for field in args:
             field_str = args
             if isinstance(field, Field):
                 field_str = field.alias_table_name + "." + field.field_name
-            if self._group_sql is None:
+            if not self._group_sql:
                 self._group_sql = field_str
             else:
                 self._group_sql += "," + field_str

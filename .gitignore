@@ -3,3 +3,4 @@ build
 dist
 lingorm.egg-info
 __pycache__
+database.json

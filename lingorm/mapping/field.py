@@ -12,11 +12,23 @@ class Field:
         self.is_generated = kwargs.get("is_generated", False)
         self.table_name = kwargs.get("table_name")
         self.alias_table_name = kwargs.get("alias_table_name")
-        self.alias_field_name = kwargs.get("alias_field_name")
 
+        self.alias_field_name = ""
         self.column_funcs = []
         self.order_by = 0
         self.is_distinct = False
+
+    def i(self):
+        result = Field(
+            field_type=self.field_type,
+            field_length=self.field_length,
+            field_name=self.field_name,
+            default_value=self.default_value,
+            is_primary=self.is_primary,
+            is_generated=self.is_generated,
+            alias_table_name=self.alias_table_name
+        )
+        return result
 
     def count(self):
         self.column_funcs.append("COUNT")
@@ -34,8 +46,10 @@ class Field:
         self.column_funcs.append("MAX")
         return self
 
-    def f(self, func):
-        self.column_funcs.append(func)
+    def f(self, *funcs):
+        self.column_funcs = []
+        for val in funcs:
+            self.column_funcs.append(str(val))
         return self
 
     def distinct(self):
@@ -77,11 +91,11 @@ class Field:
         return self.get_condition(val, CommonDefine.OPERATOR_FIND_IN_SET)
 
     def asc(self):
-        self.order_by=0
+        self.order_by = 0
         return self
 
     def desc(self):
-        self.order_by=1
+        self.order_by = 1
         return self
 
     def get_condition(self, val, operator):

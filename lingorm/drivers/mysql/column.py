@@ -12,14 +12,14 @@ class Column:
             field_str = column
             if isinstance(column, Field):
                 field_str = column.field_name
-                if column.alias_table_name is not None:
+                if column.alias_table_name:
                     field_str = column.alias_table_name + "." + field_str
                 if column.is_distinct:
                     field_str = "DISTINCT " + field_str
                 if column.column_funcs:
                     for func in column.column_funcs:
                         field_str = func+"(" + field_str + ")"
-                if column.alias_field_name is not None:
+                if column.alias_field_name:
                     field_str = field_str + " AS " + column.alias_field_name
             elif isinstance(column, object) and hasattr(column, "__alias_table_name__"):
                 field_str = column.__alias_table_name__ + ".*"

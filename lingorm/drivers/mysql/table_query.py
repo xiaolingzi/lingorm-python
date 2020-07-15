@@ -10,9 +10,9 @@ class TableQuery(TableQueryAbstract):
     __native = None
     __table = None
 
-    def __init__(self, database_info):
+    def __init__(self, database_info, transaction_key=None):
         self.__database_info = database_info
-        self.__native = NativeQuery(database_info)
+        self.__native = NativeQuery(database_info, transaction_key)
 
     def table(self, table):
         self.__table = table
