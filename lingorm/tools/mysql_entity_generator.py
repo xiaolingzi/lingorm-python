@@ -59,16 +59,32 @@ class MysqlEntityGenerator:
                 column_property += ', is_primary=True'
             if column["EXTRA"] == "auto_increment":
                 column_property += ', is_generated=True'
-            property_name = self.__get_property_name(column["COLUMN_NAME"])
+
+            temp_property_content = column_content
+            lower_property_name = self.__get_lower_property_name(column["COLUMN_NAME"])
             temp_property_content = re.sub(
-                "\\{\\{property_name\\}\\}", property_name, column_content)
+                "\\{\\{lower_property_name\\}\\}", lower_property_name, temp_property_content)
+
+            small_hump_property_name = self.__get_small_hump_property_name(column["COLUMN_NAME"])
+            temp_property_content = re.sub(
+                "\\{\\{small_hump_property_name\\}\\}", small_hump_property_name, temp_property_content)
+
+            big_hump_property_name = self.__get_big_hump_property_name(column["COLUMN_NAME"])
+            temp_property_content = re.sub(
+                "\\{\\{big_hump_property_name\\}\\}", big_hump_property_name, temp_property_content)
+
             temp_property_content = re.sub(
                 "\\{\\{column_property\\}\\}", column_property, temp_property_content)
             property_content += temp_property_content.strip(
                 " ").strip("\r\n") + "\n"
 
+            temp_init_content = column_init_content
             temp_init_content = re.sub(
-                "\\{\\{property_name\\}\\}", property_name, column_init_content)
+                "\\{\\{lower_property_name\\}\\}", lower_property_name, temp_init_content)
+            temp_init_content = re.sub(
+                "\\{\\{small_hump_property_name\\}\\}", small_hump_property_name, temp_init_content)
+            temp_init_content = re.sub(
+                "\\{\\{big_hump_property_name\\}\\}", big_hump_property_name, temp_init_content)
             property_init_content += temp_init_content.strip(
                 " ").strip("\r\n") + "\n"
 
@@ -122,20 +138,21 @@ class MysqlEntityGenerator:
         fp.close()
 
     def __get_template(self):
-        filename = os.path.dirname(__file__) + "/entity_template.py"
+        filename = os.path.abspath(os.path.dirname(__file__)) + "/entity_template.py"
         print(filename)
         if not os.path.exists(filename):
-            return ""
+            raise Exception("Template not found")
         fp = open(filename, "r")
         result = fp.read()
         fp.close()
         if result is not None:
-            result = re.sub("\# ", "", result)
-            result = re.sub("\#", "", result)
+            result = re.sub(r"\# ", "", result)
+            result = re.sub(r"\#", "", result)
         return result
 
     def __get_file_name(self, table_name):
-        result = re.sub(r'([^A-Z]*)([A-Z]{1})', self.__file_name_deal, table_name)
+        result = re.sub(r'([^A-Z]*)([A-Z]{1})',
+                        self.__file_name_deal, table_name)
         result = result.strip("_")
         return result
 
@@ -143,28 +160,37 @@ class MysqlEntityGenerator:
         return matched.group(1) + "_" + matched.group(2).lower()
 
     def __get_entity_name(self, field_name):
-        result = re.sub(r'[_\\-]+([^_\\-]{1})', self.__name_deal, field_name)
+        result = re.sub(r'[_\\-]+([^_\\-]{1})', self.__name_upper_deal, field_name)
         result = result[0].upper() + result[1:]
         return result
 
-    def __get_property_name(self, field_name):
-        result = re.sub(r'[_\\-]+([^_\\-]{1})', self.__name_deal, field_name)
+    def __get_small_hump_property_name(self, field_name):
+        result = re.sub(r'[_\\-]+([^_\\-]{1})', self.__name_upper_deal, field_name)
         result = result[0].lower() + result[1:]
         return result
 
-    def __name_deal(self, matched):
+    def __get_big_hump_property_name(self, field_name):
+        result = re.sub(r'[_\\-]+([^_\\-]{1})', self.__name_upper_deal, field_name)
+        result = result[0].upper() + result[1:]
+        return result
+
+    def __get_lower_property_name(self, field_name):
+        result = re.sub(r'[_\\-]+([^_\\-]{1})', self.__name_lower_deal, field_name)
+        result = result[0].lower() + result[1:]
+        return result
+
+    def __name_upper_deal(self, matched):
         val = matched.group(1)
         return val.upper()
+
+    def __name_lower_deal(self, matched):
+        val = matched.group(0)
+        return val.lower()
 
     # data base
     def __get_connection(self):
         connection = pymysql.connect(
-            host=self.host
-            , user=self.user
-            , passwd=self.password
-            , db="information_schema"
-            , charset="utf8mb4"
-            , cursorclass=pymysql.cursors.DictCursor
+            host=self.host, user=self.user, passwd=self.password, db="information_schema", charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor
         )
         return connection
 

@@ -18,7 +18,8 @@ class PyMysqlHelper:
         if "host" not in database_info.keys() or database_info["host"] == "":
             database_info["host"] = "127.0.0.1"
         if "port" not in database_info.keys() or database_info["port"] == "":
-            database_info["port"] = "3306"
+            database_info["port"] = 3306
+        database_info["port"] = int(database_info["port"] )
         if "charset" not in database_info.keys() or database_info["charset"] == "":
             database_info["charset"] = "UTF8"
         return database_info
@@ -27,7 +28,7 @@ class PyMysqlHelper:
         database_info = DatabaseConfig.get_read_write_database(
             self.__database_info, mode)
         return pymysql.connect(
-            host=database_info["host"], user=database_info["user"], passwd=database_info["password"], db=database_info[
+            host=database_info["host"], port=database_info["port"], user=database_info["user"], passwd=database_info["password"], db=database_info[
                 "database"], charset=database_info["charset"], cursorclass=pymysql.cursors.DictCursor
         )
 

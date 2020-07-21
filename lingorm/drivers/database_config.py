@@ -12,7 +12,7 @@ class DatabaseConfig:
     @staticmethod
     def get_config_by_database(database):
         config_dict = DatabaseConfig.__get_config()
-        
+
         for config_item in config_dict:
             item = config_dict[config_item]
             if "database" in item and item["database"] == database:
@@ -105,8 +105,9 @@ class DatabaseConfig:
                 config_file = os.path.join(dir, config_file)
 
             if not os.path.exists(config_file):
-                raise Exception("Database config file not found.")
-            
+                raise Exception(
+                    "Database config file not found in "+config_file+".")
+
             DatabaseConfig.__database_config = FileHelper.get_dict_from_json_file(
                 config_file)
             if not DatabaseConfig.__database_config:

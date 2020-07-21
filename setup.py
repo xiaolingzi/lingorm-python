@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='lingorm',
-    version='2.0.0',
+    version='0.0.1',
     url='https://lingorm.com',
     description='orm framework for python',
     author='xiaolingzi',
