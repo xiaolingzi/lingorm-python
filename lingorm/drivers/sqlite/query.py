@@ -26,7 +26,6 @@ class Query(QueryAbstract):
     def first(self, cls, where, order_by=None):
         sql = self.__get_sql(cls, where, order_by)
         sql += " LIMIT 1"
-
         return self.__native.first(sql, where.param_dict, cls)
 
     def find(self, cls, where, order_by=None, top=0):
@@ -90,7 +89,7 @@ class Query(QueryAbstract):
         sql = "INSERT INTO " + table_name + \
             "(" + field_str + ")VALUES(" + value_str + ")"
         result = Native(self.__database_info,
-                               self.__transaction_key).insert(sql, param_dict)
+                        self.__transaction_key).insert(sql, param_dict)
         return result
 
     def batch_insert(self, entity_list, none_ignore=False):
@@ -179,6 +178,8 @@ class Query(QueryAbstract):
             table_name = entity.__database__ + "." + table_name
 
         sql = "UPDATE " + table_name + " SET " + set_str + " WHERE " + where_str
+        sql = sql.replace(" "+entity.__alias_table_name__+".", " ")
+        sql = sql.replace(","+entity.__alias_table_name__+".", ",")
         result = self.__native.execute(sql, param_dict)
         return result
 
@@ -243,7 +244,8 @@ class Query(QueryAbstract):
 
         sql = "UPDATE " + table_name + " SET " + set_str + \
             " WHERE " + primary_key + " IN(" + id_str + ")"
-
+        sql = sql.replace(" "+entity_list[0].__alias_table_name__+".", " ")
+        sql = sql.replace(","+entity_list[0].__alias_table_name__+".", ",")
         result = self.__native.execute(sql, param_dict)
         return result
 
@@ -270,10 +272,9 @@ class Query(QueryAbstract):
         if cls.__database__:
             table_name = cls.__database__ + "." + table_name
 
-        if cls.__alias_table_name__:
-            table_name = table_name + " " + cls.__alias_table_name__
-
         sql = "UPDATE " + table_name + " SET " + set_str + " WHERE " + where.sql
+        sql = sql.replace(" "+cls.__alias_table_name__+".", " ")
+        sql = sql.replace(","+cls.__alias_table_name__+".", ",")
         result = self.__native.execute(sql, where.param_dict)
         return result
 
@@ -310,12 +311,10 @@ class Query(QueryAbstract):
         table_name = cls.__table__
         if cls.__database__:
             table_name = cls.__database__ + "." + table_name
-        alias_table_name = ""
-        if cls.__alias_table_name__:
-            alias_table_name = cls.__alias_table_name__
-            table_name = table_name + " " + cls.__alias_table_name__
 
-        sql = "DELETE " + alias_table_name + " FROM " + table_name + " WHERE " + where.sql
+        sql = "DELETE FROM " + table_name + " WHERE " + where.sql
+        sql = sql.replace(" "+cls.__alias_table_name__+".", " ")
+        sql = sql.replace(","+cls.__alias_table_name__+".", ",")
         result = self.__native.execute(sql, where.param_dict)
         return result
 

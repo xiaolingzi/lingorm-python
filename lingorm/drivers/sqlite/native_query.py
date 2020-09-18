@@ -4,13 +4,13 @@ from ..native_query_abstract import NativeQueryAbstract
 
 
 class NativeQuery(NativeQueryAbstract):
-    __pdo_mysql = None
+    __pdo = None
 
     def __init__(self, database_info, transaction_key=None):
-        self.__pdo_mysql = Native(database_info, transaction_key)
+        self.__pdo = Native(database_info, transaction_key)
 
     def execute(self, sql, param_dict):
-        return self.__pdo_mysql.execute(sql, param_dict)
+        return self.__pdo.execute(sql, param_dict)
 
     def first(self, sql, param_dict, cls=None):
         sql = "SELECT * FROM (" + sql + ") tmp LIMIT 1"
@@ -45,7 +45,7 @@ class NativeQuery(NativeQueryAbstract):
         return count
 
     def __get_data(self, sql, param_dict, cls=None):
-        temp_result = self.__pdo_mysql.fetch_all(sql, param_dict)
+        temp_result = self.__pdo.fetch_all(sql, param_dict)
         if cls is None or temp_result is None:
             return temp_result
         result = []

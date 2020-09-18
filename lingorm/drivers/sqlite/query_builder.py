@@ -45,7 +45,7 @@ class QueryBuilder(QueryBuilderAbstract):
         if cls.__alias_table_name__:
             table_name = table_name + " " + cls.__alias_table_name__
 
-        join_sql = "LEFT JOIN " + table_name + " ON " + on_sql
+        join_sql = "LEFT OUTER JOIN " + table_name + " ON " + on_sql
         if not self._join_sql:
             self._join_sql = join_sql
         else:
@@ -54,30 +54,7 @@ class QueryBuilder(QueryBuilderAbstract):
         return self
 
     def right_join(self, cls, on_expression):
-        on_sql = ""
-        if type(on_expression) == str and on_expression != "":
-            on_sql = on_expression
-        elif isinstance(on_expression, Where):
-            on_sql = on_expression.sql
-            self.param_dict = {**self._param_dict, **on_expression.param_dict}
-        elif isinstance(on_expression, Condition):
-            expression_dict = Where().get_expression(on_expression, self._param_dict)
-            on_sql = expression_dict["sql"]
-            self._param_dict = expression_dict["param_dict"]
-
-        table_name = cls.__table__
-        if cls.__database__:
-            table_name = cls.__database__ + "." + table_name
-        if cls.__alias_table_name__:
-            table_name = table_name + " " + cls.__alias_table_name__
-
-        join_sql = "RIGHT JOIN " + table_name + " ON " + on_sql
-        if not self._join_sql:
-            self._join_sql = join_sql
-        else:
-            self._join_sql += " " + join_sql
-
-        return self
+        return False
 
     def inner_join(self, cls, on_expression):
         on_sql = ""

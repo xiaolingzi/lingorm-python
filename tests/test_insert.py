@@ -1,7 +1,7 @@
 from lingorm import ORM
 import pytest
 import time
-from ..entity.first_table_entity import FirstTableEntity
+from .entity.first_table_entity import FirstTableEntity
 
 class TestInsert:
 

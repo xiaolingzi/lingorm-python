@@ -1,6 +1,6 @@
 from lingorm import ORM
 import pytest
-from ..entity.first_table_entity import FirstTableEntity
+from .entity.first_table_entity import FirstTableEntity
 
 
 class TestQuery:

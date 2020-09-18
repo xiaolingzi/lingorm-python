@@ -1,7 +1,7 @@
 from lingorm import ORM
 import pytest
-from ..entity.first_table_entity import FirstTableEntity
-from ..entity.second_table_entity import SencondTableEntity
+from .entity.first_table_entity import FirstTableEntity
+from .entity.second_table_entity import SencondTableEntity
 
 
 class TestQueryBuilder:
@@ -52,7 +52,10 @@ class TestQueryBuilder:
         where.add_and(f.first_name.like("query%"))
         builder = self.db.query_builder()
         builder = builder.select(f.first_number, f.first_name.i().max().alias("first_name"), s.second_name.i().f("MAX").alias("second_name")).from_table(f).right_join(
-            s, f.first_number.eq(s.second_number)).where(where).group_by(f.first_number).order_by(f.first_number.desc())
+            s, f.first_number.eq(s.second_number))
+        if not builder:
+            return
+        builder = builder.where(where).group_by(f.first_number).order_by(f.first_number.desc())
 
         result = builder.find_page(1,2,f)
         assert result is not None

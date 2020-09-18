@@ -3,7 +3,7 @@ from lingorm.mapping import *
 
 class SencondTableEntity(ORMEntity):
     __table__ = "second_table"
-    __database__ = "test"
+    __database__ = ""
     id = Field(field_name="id", field_type="int",
                is_primary=True, is_generated=True)
     second_name = Field(field_name="second_name", field_type="string", length="45")
